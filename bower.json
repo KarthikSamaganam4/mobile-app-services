@@ -1,0 +1,29 @@
+{
+  "name": "casestudynode",
+  "description": "mean architecture application for back-end applications",
+  "main": "index.js",
+  "authors": [
+    "ramkumar"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "mean",
+    "case-study"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "./app/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "*",
+    "bootstrap": "*",
+    "underscore": "*",
+    "socket.io-client": "^1.5.1"
+  }
+}

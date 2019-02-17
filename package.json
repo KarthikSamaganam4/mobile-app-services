@@ -1,0 +1,32 @@
+{
+  "name": "casestudynode",
+  "version": "1.0.0",
+  "description": "mean architecture application for back-end applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server app -p 8000"
+  },
+  "keywords": [
+    "mean",
+    "case-study"
+  ],
+  "author": "ramkumar",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.1.2",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "express-jwt": "^5.1.0",
+    "http-server": "^0.9.0",
+    "jsonwebtoken": "^7.1.9",
+    "q": "^1.4.1",
+    "socket.io": "^1.5.1",
+    "socket.io-client": "^1.5.1"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-sonar-runner": "^2.4.8",
+    "nodemon": "^1.18.10"
+  }
+}
