@@ -4,9 +4,12 @@
 var express = require('express');
 var User = require('../models/User');
 var UserService = require('../business-services/user-service');
+var QuestionService = require('../business-services/questions-service');
+
 
 var UserServiceRouter = new express.Router();
 var UserService = new UserService();
+var QuestionService = new QuestionService();
 
 
 UserServiceRouter.get('/',
@@ -17,17 +20,12 @@ UserServiceRouter.get('/',
             });
     });
 
-UserServiceRouter.post('/register',
-    function (request, response) {
-        var user = request.body;
-        user.__proto__ = new User();
-        UserService.addUser(user,
-            function (status) {
-                if (!status) {
-                    throw new Error('User Service Failed Adding the Record!');
-                }
 
-                response.json(user);
+UserServiceRouter.get('/questions',
+    function (request, response) {
+        QuestionService.getQuestions(
+            function (records) {
+                response.json(records);
             });
     });
 

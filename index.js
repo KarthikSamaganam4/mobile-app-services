@@ -13,6 +13,8 @@ var authorizationUtils = require('./js/utilities/unauthorization-handlers');
 var customerRouter = require('./js/routing/customer-service-routing');
 var userServiceRouter = require('./js/routing/user-service-routing');
 
+var registerServiceRouter = require('./js/routing/regiser-service-routing');
+
 var authenticationRouter = require('./js/routing/authentication-service-routing');
 
 var hostName = os.hostname();
@@ -43,6 +45,7 @@ console.log("userServiceRouter,"+userServiceRouter)
 
 app.use('/api/customers', customerRouter);
 app.use('/api/users', userServiceRouter);
+app.use('/api/register', registerServiceRouter);
 
 app.use('/authenticate', authenticationRouter);
 
