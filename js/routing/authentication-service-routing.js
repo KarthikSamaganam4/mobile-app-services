@@ -3,11 +3,11 @@
  */
 var express = require('express');
 var jwt = require('jsonwebtoken');
-var UserProfileService = require('../business-services/user-profile-service');
+var UserService = require('../business-services/user-service');
 
 var authenticationRouter = new express.Router();
 var authenticationRoute = authenticationRouter.route('/');
-var userProfileService = new UserProfileService();
+var userService = new UserService();
 var ONE_HOUR = 60 * 60;
 
 authenticationRoute.post(
@@ -21,14 +21,14 @@ authenticationRoute.post(
         if (!validation)
             throw new Error("Invalid Credential Data Specified!");
 
-        userProfileService.validate(credentials.userName, credentials.password,
+        userService.validate(credentials.userName, credentials.password,
             function (status) {
                 if (!status) {
                     response.sendStatus(HTTP_UNAUTHORIZED).send('Authentication Failed!');
                     return;
                 }
 
-                userProfileService.getProfile(credentials.userName,
+                userService.getProfile(credentials.userName,
                     function (profile) {
                         if (!profile)
                             throw new Error("Invalid User Name Specified for Profile!");
@@ -43,6 +43,6 @@ authenticationRoute.post(
                     });
             });
     });
-    
+
 
 module.exports = authenticationRouter;
