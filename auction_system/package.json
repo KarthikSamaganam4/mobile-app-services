@@ -1,0 +1,20 @@
+{
+  "name": "mobilemanufacturer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "karthik samaganam",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "~4.16.3",
+    "solc": "0.5.9",
+    "web3": "^1.0.0-beta.55",
+    "node-gyp": "^4.0.0",
+    "update-json-file": "*",
+    "edit-json-file": "*"
+  }
+}

@@ -1,0 +1,335 @@
+https://venknar.github.io/DAppsSamples/Simple-Auction/Simple-Solution.html
+
+
+
+
+
+
+
+
+
+pragma solidity ^0.5.9;
+
+contract User { 
+    enum Role {member, owner, auctioner, DoesNotExist}
+
+    // The hash of the username is mapped to he account address of a user
+    mapping(bytes32 => address) private _userAccount;
+
+    // account address of the user is mapped to the user role
+    mapping(address => Role) private _userRole;
+    mapping(address => bytes) private _username;
+
+    function registerUser(string memory username, address account, uint role ) public {
+        require(_userAccount[sha256(bytes(username))] == address(0) , "username already exists");
+        require(_userRole[account] == Role.DoesNotExist, "account already exists");
+
+        _userAccount[sha256(bytes(username))] = account;
+        _userRole[account] = Role(role);
+        _username[account] = bytes(username);
+    } 
+
+    function getRole(address account) public view returns(uint) {
+        return uint(_userRole[account]);
+    }
+
+    function getUserName(address account) public view returns(string memory) {
+        return string(_username[account]);
+    }
+
+    function getAddressOfUser(string memory username) public view returns (address) {
+        return _userAccount[sha256(bytes(username))];
+    }
+}
+
+contract AuctionFlow { 
+    
+    struct Asset {
+        string asset_type;
+        address owner;
+        address holder;
+    }
+    
+    struct Bid {
+        address bidder;
+        uint256 amount;
+        uint timestamp;
+    }
+    
+    mapping(string => Asset) private assets;
+    
+    
+    
+    enum AuctionStatus {Pending, Active, Inactive}
+    
+    struct Auction {
+        // Location and ownership information of the item for sale
+        address seller;
+        address contractAddress; // Contract where the item exists
+        string recordId;         // RecordID within the contract as per the Asset interface
+
+        // Auction metadata
+        string title;
+        string description;      // Optionally markdown formatted?
+        uint blockNumberOfDeadline;
+        AuctionStatus status;
+
+        // Distribution bonus
+        uint distributionCut;    // In percent, ie 10 is a 10% cut to the distribution address
+        address distributionAddress; 
+
+        // Pricing
+        uint256 startingPrice;   // In wei
+        uint256 reservePrice;
+        uint256 currentBid;
+
+        Bid[] bids;
+    }
+    
+    Auction[] public auctions; 
+    
+    function createAsset(string mapping asset_id, string memory asset_type, address owner, address holder) public {
+        
+        onlyOwner
+        
+        Asset memory asset = Asset(asset_type, owner, holder);
+        assets[asset_id] = asset;
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+    // Create an auction, transfer the item to this contract, activate the auction
+    function createAuction(
+                           string _title,
+                           string _description,
+                           address _contractAddressOfAsset,
+                           string _recordIdOfAsset,
+                           uint _deadline,   // in blocknumber
+                           uint256 _startingPrice,
+                           uint256 _reservePrice,
+                           uint _distributionCut,
+                           address _distributionCutAddress) returns (uint auctionId) {
+
+        // Check to see if the seller owns the asset at the contract
+        if (!partyOwnsAsset(msg.sender, _contractAddressOfAsset, _recordIdOfAsset)) {
+            LogFailure("Seller does not own this asset");
+            throw;
+        }
+
+        // Check to see if the auction deadline is in the future
+        if (block.number >= _deadline) {
+            LogFailure("Block number is not in the future");
+            throw;
+        }
+
+        // Price validations
+        if (_startingPrice < 0 || _reservePrice < 0) {
+            LogFailure("StartingPrice or ReservePrice was below zero");
+            throw;
+        }
+
+        // Distribution validations
+        if (_distributionCut < 0 || _distributionCut > 100) {
+            LogFailure("DistributionCut is invalid");
+            throw;
+        }
+
+        if (activeContractRecordConcat[strConcat(addrToString(_contractAddressOfAsset), _recordIdOfAsset)] == true) {
+            LogFailure("Item already on auction");
+            throw;
+        }
+
+        auctionId = auctions.length++;
+        Auction a = auctions[auctionId];
+        a.seller = msg.sender;
+        a.contractAddress = _contractAddressOfAsset;
+        a.recordId = _recordIdOfAsset;
+        a.title = _title;
+        a.description = _description;
+        a.blockNumberOfDeadline = _deadline;
+        a.status = AuctionStatus.Pending;
+        a.distributionCut = _distributionCut;
+        a.distributionAddress = _distributionCutAddress;
+        a.startingPrice = _startingPrice;
+        a.reservePrice = _reservePrice;
+        a.currentBid = _startingPrice;
+
+        auctionsRunByUser[a.seller].push(auctionId);
+        activeContractRecordConcat[strConcat(addrToString(_contractAddressOfAsset), _recordIdOfAsset)] = true;
+
+        AuctionCreated(auctionId, a.title, a.startingPrice, a.reservePrice);
+
+        return auctionId;
+    }
+    
+    
+    
+    
+    function partyOwnsAsset(address _party, address _contract, string _recordId) returns (bool success) {
+        Asset assetContract = Asset(_contract);
+        return assetContract.owner(_recordId) == _party;
+    }
+
+
+    function getAuction(uint idx) returns (address, address, string, string, string, uint, uint, address, uint256, uint256, uint256, uint) {
+        Auction a = auctions[idx];
+        if (a.seller == 0) {
+            throw;
+        }
+
+        return (a.seller,
+                a.contractAddress,
+                a.recordId,
+                a.title,
+                a.description,
+                a.blockNumberOfDeadline,
+                a.distributionCut,
+                a.distributionAddress,
+                a.startingPrice,
+                a.reservePrice,
+                a.currentBid,
+                a.bids.length
+                );
+    }
+    
+    
+    
+    function cancelAuction(uint auctionId) onlySeller(auctionId) returns (bool) {
+        Auction a = auctions[auctionId];
+
+        if (!partyOwnsAsset(this, a.contractAddress, a.recordId)) throw;
+        if (a.currentBid >= a.reservePrice) throw;   // Can't cancel the auction if someone has already outbid the reserve.
+
+        Asset asset = Asset(a.contractAddress);
+        if(!asset.setOwner(a.recordId, a.seller)) {
+            throw;
+        }
+
+        // Refund to the bidder
+        uint bidsLength = a.bids.length;
+        if (bidsLength > 0) {
+            Bid topBid = a.bids[bidsLength - 1];
+            refunds[topBid.bidder] += topBid.amount;
+
+            activeContractRecordConcat[strConcat(addrToString(a.contractAddress), a.recordId)] = false;
+        }
+
+        AuctionCancelled(auctionId);
+        a.status = AuctionStatus.Inactive;
+        return true;
+    }
+    
+    function placeBid(uint auctionId) payable onlyLive(auctionId) returns (bool success) {
+        uint256 amount = msg.value;
+        Auction a = auctions[auctionId];
+
+        if (a.currentBid >= amount) throw;
+
+        uint bidIdx = a.bids.length++;
+        Bid b = a.bids[bidIdx];
+        b.bidder = msg.sender;
+        b.amount = amount;
+        b.timestamp = now;
+        a.currentBid = amount;
+
+        auctionsBidOnByUser[b.bidder].push(auctionId);
+
+        // Log refunds for the previous bidder
+        if (bidIdx > 0) {
+            Bid previousBid = a.bids[bidIdx - 1];
+            refunds[previousBid.bidder] += previousBid.amount;
+        }
+
+        BidPlaced(auctionId, b.bidder, b.amount);
+        return true;
+    }
+    
+    
+    
+    
+        function endAuction(uint auctionId) returns (bool success) {
+        // Check if the auction is passed the end date
+        Auction a = auctions[auctionId];
+        activeContractRecordConcat[strConcat(addrToString(a.contractAddress), a.recordId)] = false;
+
+        // Make sure auction hasn't already been ended
+        if (a.status != AuctionStatus.Active) {
+            LogFailure("Can not end an auction that's already ended");
+            throw;
+        }
+        
+        if (block.number < a.blockNumberOfDeadline) {
+            LogFailure("Can not end an auction that hasn't hit the deadline yet");
+            throw; 
+        }
+
+        Asset asset = Asset(a.contractAddress);
+
+        // No bids, make the auction inactive
+        if (a.bids.length == 0) {
+            if(!asset.setOwner(a.recordId, a.seller)) {
+                throw;
+            }
+            a.status = AuctionStatus.Inactive;
+            return true;
+        }
+
+        Bid topBid = a.bids[a.bids.length - 1];
+
+        // If the auction hit its reserve price
+        if (a.currentBid >= a.reservePrice) {
+            uint distributionShare = a.currentBid * a.distributionCut / 100;  // Calculate the distribution cut
+            uint sellerShare = a.currentBid - distributionShare;
+
+            if(!asset.setOwner(a.recordId, topBid.bidder)) {
+                throw;
+            } // Set the items new owner
+
+            refunds[a.distributionAddress] += distributionShare;
+            refunds[a.seller] += sellerShare;
+
+            AuctionEndedWithWinner(auctionId, topBid.bidder, a.currentBid);
+        } else {
+            // Return the item to the owner and the money to the top bidder
+            if(!asset.setOwner(a.recordId, a.seller)) {
+                throw;
+            }
+
+            refunds[topBid.bidder] += a.currentBid;
+
+            AuctionEndedWithoutWinner(auctionId, a.currentBid, a.reservePrice);
+        }
+
+        a.status = AuctionStatus.Inactive;
+        return true;
+    }
+
+    
+    
+    
+    
+    
+    modifier onlyOwner {
+        if (msg.sender != owner) throw;
+        _;
+    }
+
+    
+    
+    
+}
+
+
+
+
+
+
+https://github.com/dob/auctionhouse/blob/master/contracts/AuctionHouse.sol#L271
+
+https://github.com/genesisdotre/ethereum-auction/blob/master/contracts/Auction.sol
+
