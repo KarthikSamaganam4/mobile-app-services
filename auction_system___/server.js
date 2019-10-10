@@ -6,20 +6,16 @@ var compileObj = require('./dlt/compile');
 var deployObj = require('./dlt/deploy');
 
 
-//var userHandler = require('./routes/user');
+var userHandler = require('./routes/user');
 var auctionHandler = require('./routes/auctionFlow');
 
 app.use(bodyParser.json({ type: 'application/json' }));
 
 
-app.post('/registerUser', auctionHandler.registerUser);
-app.post('/loginUser', auctionHandler.loginUser);
-
-app.post('/createAuction', auctionHandler.createAuction);
-app.post('/registerWinningBid', auctionHandler.registerWinningBid);
-app.post('/getWinningBid', auctionHandler.getWinningBid);
-app.post('/getAuctionBids', auctionHandler.getAuctionBids);
-
+app.post('/registerUser', userHandler.registerUser);
+app.post('/loginUser', userHandler.loginUser);
+app.get('/getRole', userHandler.getUserRole);
+app.get('/getUser', userHandler.getUserDetails);
 
 // function initializeData(){
 //     initialzeRouteHandler.initializeData();
@@ -39,7 +35,7 @@ app.post('/getAuctionBids', auctionHandler.getAuctionBids);
 // app.get('/getProductInformation', consumerHandler.getProductsInformation);
 app.listen(3000, async function(){
     
-    //await compileObj.compileContracts();
+    await compileObj.compileContracts();
     await deployObj.deployContracts();
     console.log("Application is listening on port 3000");
 });

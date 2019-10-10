@@ -6,7 +6,7 @@ const web3 = Web3.getWeb3Instance();
 var fileName = './config.json';
 const config = require(fileName);
 
-//var userContact;
+var userContact;
 var auctionFlow;
 
 function getContractInstance(contractObj) {
@@ -76,13 +76,13 @@ async function deployContract(contractObj) {
 
 module.exports = {
     deployContracts : async function() {
-        //userContact = require('./build/User.json');
+        userContact = require('./build/User.json');
         auctionFlow = require('./build/AuctionFlow.json');
 
-        //userContact.name = "UserContract";
+        userContact.name = "UserContract";
         auctionFlow.name = "AuctionFlowContract";
 
-        //deployContract(userContact)
+        deployContract(userContact)
         deployContract(auctionFlow)
     }
 }
