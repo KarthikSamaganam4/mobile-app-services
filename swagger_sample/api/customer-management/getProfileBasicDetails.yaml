@@ -1,0 +1,124 @@
+---
+  get: 
+    tags: 
+      - "Customer Management API REST Specification"
+    description: "Returns the customer profile details"
+    summary: "Fetch customer profile details"
+    produces: 
+      - "application/json"
+    parameters: 
+      - 
+        name: "customerCode"
+        in: "path"
+        description: "Customer Code"
+        required: true
+        type: "string"
+      - 
+        name: "lang"
+        in: "query"
+        description: "Language"
+        required: false
+        type: "string"
+    responses: 
+      204: 
+        description: "No Content" 
+      200: 
+        description: "Returns profile details of the customer"
+        schema: 
+          $ref: "#/definitions/ProfileBasicDetails"
+      
+      400: 
+        description: "Bad Request"
+        schema: 
+          $ref: "#/definitions/common_error"
+      422: 
+        description: "unprocessable entity"
+        schema: 
+          $ref: "#/definitions/common_error"
+      401: 
+        description: "Unauthorized"
+        schema: 
+          $ref: "#/definitions/common_error"
+      404: 
+        description: "Not found"
+        schema: 
+          $ref: "#/definitions/common_error"
+      500: 
+        description: "Internal server error"
+        schema: 
+          $ref: "#/definitions/common_error"
+  definitions: 
+    common_error: 
+      type: "object"
+      properties: 
+        errorMessage: 
+          type: "string"
+        errorCode:
+          type: "string"
+      required: true 
+    ProfileBasicDetails: 
+      properties: 
+        firstName: 
+          type: "string"
+        lastName: 
+          type: "string"
+        gender: 
+          type: "string"
+        fatherName: 
+          type: "string"
+        country: 
+          type: "string"
+        dateOfBirth: 
+          type: "string"
+        VIP: 
+          type: "string"
+        customerFullName: 
+          type: "string"
+        customerCategory: 
+          type: "string"
+        customerSubCategory: 
+          type: "string"
+        customerType: 
+          type: "string"
+        customerCode: 
+          type: "string"
+        profileStatus: 
+          type: "string"
+        addresses: 
+          type: "array"
+          items: 
+            properties: 
+              districName: 
+                type: "string"
+              postalCode: 
+                type: "string"
+              cityName: 
+                type: "string"
+              locality: 
+                type: "string"
+              provinceName: 
+                type: "string"
+              streetName: 
+                type: "string"
+              addressType: 
+                type: "string"
+              addressFormat: 
+                type: "string"
+              buildingNumber: 
+                type: "string"
+        identificationDetails: 
+          type: "array"
+          items: 
+            properties: 
+              idType: 
+                type: "string"
+              documentPurpose: 
+                type: "string"
+              idNumber: 
+                type: "string"
+    
+    
+    
+    
+    
+    

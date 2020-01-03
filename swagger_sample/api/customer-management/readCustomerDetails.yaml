@@ -1,0 +1,756 @@
+---
+  get: 
+    tags: 
+      - "Customer Management API REST Specification"
+    description: "Returns customer basic information, notifications, addresses, identificationDetails and serviceDetails.<br> Note: billingDetails is available only if the businessType is postpaid."
+    summary: "Fetch customer details"
+    produces: 
+      - "application/json"
+    parameters: 
+      - 
+        name: "customerCode"
+        in: "query"
+        description: "Customer Code"
+        required: false
+        type: "string"
+      - 
+        name: "loginName"
+        in: "query"
+        description: "login Name"
+        required: false
+        type: "string"
+      - 
+        name: "lang"
+        in: "query"
+        description: "Language"
+        required: false
+        type: "string"
+      - 
+        name: "searchKey"
+        in: "query"
+        description: "search based on serviceNumber"
+        required: false
+        type: "string"
+      - 
+        name: "pageNumber"
+        in: "query"
+        description: "pageNumber"        
+        required: false
+        type: "number"
+      - 
+        name: "pageSize"
+        in: "query"
+        description: "no of items per page"        
+        required: false
+        type: "number"
+    responses: 
+      204: 
+        description: "No Content" 
+      200: 
+        description: "Returns customer basic information , notifications,serviceDetails,addresses. In addresses, addressFormat is either POSA( Postal Address) or POBA(Post office box address). poBox field is applicable for addressFormat POBA.<br> identificationDetails consist of idType - identification type(Passport/ National Id/Company Registartion Id).<br> documentPurpose -POID(proof of identification), Corporate(Corporate identity), MMS (MMS activation) and IdNumber is based on the identification type. BillingDetails is available only if the business type is postpaid. "
+        schema: 
+          $ref: "#/definitions/CustomerDetailsV2"
+      400: 
+        description: "Bad Request"
+        schema: 
+          $ref: "#/definitions/common_error"
+      422: 
+        description: "unprocessable entity"
+        schema: 
+          $ref: "#/definitions/common_error"
+      401: 
+        description: "Unauthorized"
+        schema: 
+          $ref: "#/definitions/common_error"
+      404: 
+        description: "Not found"
+        schema: 
+          $ref: "#/definitions/common_error"
+      500: 
+        description: "Internal server error"
+        schema: 
+          $ref: "#/definitions/common_error"
+  definitions: 
+    common_error: 
+      type: "object"
+      properties: 
+        errorMessage: 
+          type: "string"
+        errorCode:
+          type: "string"
+      required: true 
+    CustomerDetailsV2: 
+      properties: 
+        profileManagerName:
+          type: "string"
+        firstName: 
+          type: "string"
+        lastName: 
+          type: "string"
+        gender: 
+          type: "string"
+        fatherName: 
+          type: "string"
+        nationality: 
+          type: "string"
+        dateOfBirth: 
+          type: "string"
+        VIP: 
+          type: "boolean"
+        customerFullName: 
+          type: "string"
+        customerCategory: 
+          type: "string"
+        customerSubCategory: 
+          type: "string"
+        customerType: 
+          type: "string"
+        customerCode: 
+          type: "string"
+        profileStatus: 
+          type: "string" 
+        telephoneHome: 
+          type: "string"
+        telephoneWork: 
+          type: "string" 
+        suffix: 
+          type: "string"
+        title: 
+          type: "string"
+        educationalQualification: 
+          type: "string"
+        marketingUpdates:
+          type: "string"
+        serviceUpdates:
+          type: "string"
+        risk:
+          type: "string"
+        primaryContactNumber:
+          type: "string"
+        industry:
+          type: "string"
+        vatNumber:
+          type: "string"
+        dateOfEstablishment:
+          type: "string"
+        totalServices:
+          type: "number"
+        totalAccounts:
+          type: "number"
+        groupDataShareIsApplicable:
+          type: "boolean"
+        salesRepresentative:
+          type: "string"
+        relationshipManager:
+          type: "string"
+        groupDataShareDetails:
+          type: "object"
+          properties:
+            type:
+              type: "string"
+            virtualNumber:
+              type: "string"
+        addresses: 
+          type: "array"
+          items: 
+            properties: 
+              latitude: 
+                type: "object"
+                properties:
+                  code:
+                    type: "string"
+                  name:
+                    type: "string"
+              longitude: 
+                type: "object"
+                properties:
+                  code:
+                    type: "string"
+                  name:
+                    type: "string"
+              districName: 
+                type: "string"
+              postalCode: 
+                type: "string"
+              cityName: 
+                type: "object"
+                properties:
+                  code:
+                    type: "string"
+                  name:
+                    type: "string"
+              locality: 
+                type: "string"
+              provinceName: 
+                type: "object"
+                properties:
+                  code:
+                    type: "string"
+                  name:
+                    type: "string"
+              streetName: 
+                type: "object"
+                properties:
+                  code:
+                    type: "string"
+                  name:
+                    type: "string"
+              addressFormat: 
+                type: "string"
+              addressType: 
+                type: "string"
+              buildingNumber: 
+                type: "string" 
+              country: 
+                type: "object"
+                properties:
+                  code:
+                    type: "string"
+                  name:
+                    type: "string" 
+              poBox: 
+                type: "string"
+              premises: 
+                type: "string"
+              buildingName: 
+                type: "string"
+              apartment: 
+                type: "string"
+              neighbourhood: 
+                type: "string"
+              state: 
+                type: "object"
+                properties:
+                  code:
+                    type: "string"
+                  name:
+                    type: "string" 
+              address1: 
+                type: "string"
+              address2: 
+                type: "string"
+              address3: 
+                type: "string"
+              LGA: 
+                type: "string"
+              localityPostalCode: 
+                type: "object"
+                properties:
+                  code:
+                    type: "string"
+                  name:
+                    type: "string"
+              subLocalityPostalCode: 
+                type: "object"
+                properties:
+                  code:
+                    type: "string"
+                  name:
+                    type: "string"
+              subLocality: 
+                type: "object"
+                properties:
+                  code:
+                    type: "string"
+                  name:
+                    type: "string"
+              landMark: 
+                type: "string"
+              floor: 
+                type: "string"
+        identificationDetails: 
+          type: "array"
+          items: 
+            properties: 
+              idType: 
+                type: "string"
+              documentPurpose: 
+                type: "string"
+              idNumber: 
+                type: "string"
+        notifications:
+          type: "object"
+          properties:            
+            isDNDApplicable: 
+              type: "boolean"
+            language: 
+              type: "string"
+            isContactByEmail:
+              type: "boolean"
+            isContactBySms:
+              type: "boolean"
+            emailId: 
+              type: "string"
+            isContactByPhone:
+              type: "boolean"
+            mobileNo: 
+              type: "string"
+            alternateMobileNumber: 
+              type: "string"
+            contactName: 
+              type: "string"
+            contactNumber: 
+              type: "string"
+            contactEmailId: 
+              type: "string"
+            isContactByFax:
+              type: "boolean"
+            faxNo: 
+              type: "string"
+            isContactByPost:
+              type: "boolean"
+            isContactByUssd:
+              type: "boolean"
+            isContactByApp:
+              type: "boolean"
+            landlinePhoneNo:
+              type: "string"
+            preferredTime:
+              type: "string"
+        billingDetails: 
+          type: "array"
+          items: 
+            properties: 
+              accountOwnerName: 
+                type: "string"
+              accountHolderName: 
+                type: "string"
+              isAutoDebitApplicable:
+                type: "string"
+              accountManagerDetails:
+                type: "object"
+                properties:
+                  emailId:
+                    type: "string"
+                  contactNumber:
+                    type: "number"
+                  location:
+                    type: "string"
+                  department:
+                    type: "string"
+                  name:
+                    type: "string"
+                  loginUser:
+                    type: "string"
+              autoDebtDetails:
+                type: "object"
+                properties:
+                  startDate: 
+                    type: "string"
+                  endDate: 
+                    type: "string"
+                  remarks: 
+                    type: "string"
+                  autoDebitUpperLimit: 
+                    type: "number"
+                  cardDetails: 
+                    type: "object"
+                    properties:
+                      cardExpiryDate: 
+                        type: "string"
+                      cardHolderName: 
+                        type: "string"
+                      cardType: 
+                        type: "string"
+                      cardNumber: 
+                        type: "string"
+                      bank: 
+                        type: "object"
+                        properties: 
+                          name: 
+                            type: "string"
+                          code: 
+                            type: "string"
+              dateOfBirth: 
+                type: "string"
+              gender: 
+                type: "string"
+              accountCode: 
+                type: "string"
+              customerCode: 
+                type: "string"
+              isBillByEmail: 
+                type: "boolean"
+              emailId:
+                type: "string"
+              emailIds: 
+                type: "array"
+                items: 
+                  type: "string"
+              isBillBySms:
+                type: "boolean"
+              mobileNo:
+                type: "string"
+              isBillByFax:
+                type: "boolean"
+              faxNo:
+                type: "string"
+              isBillByPost:
+                type: "boolean"
+              currency:
+                type: "string"
+              language:
+                type: "string"
+              billCycle: 
+                type: "string"
+              billPeriodicity:
+                type: "string"
+              isTaxApplicable:
+                type: "boolean"
+              addresses: 
+                type: "array"
+                items: 
+                  properties: 
+                    latitude: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    longitude: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    districName: 
+                      type: "string"
+                    postalCode: 
+                      type: "string"
+                    cityName: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    locality: 
+                      type: "string"
+                    provinceName: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    streetName: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    addressFormat: 
+                      type: "string"
+                    addressType: 
+                      type: "string"
+                    buildingNumber: 
+                      type: "string" 
+                    country: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string" 
+                    poBox: 
+                      type: "string"
+                    premises: 
+                      type: "string"
+                    buildingName: 
+                      type: "string"
+                    apartment: 
+                      type: "string"
+                    neighbourhood: 
+                      type: "string"
+                    state: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string" 
+                    address1: 
+                      type: "string"
+                    address2: 
+                      type: "string"
+                    address3: 
+                      type: "string"
+                    LGA: 
+                      type: "string"
+                    localityPostalCode: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    subLocalityPostalCode: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    subLocality: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    landMark: 
+                      type: "string"
+                    floor: 
+                      type: "string"
+              notifications:
+                type: "object"
+                properties:            
+                  isDNDApplicable: 
+                    type: "boolean"
+                  language: 
+                    type: "string"
+                  currency:
+                    type: "string"
+                  preferredTime:
+                    type: "string"
+                  fromTime: 
+                    type: "string"
+                  toTime: 
+                    type: "string"
+                  isContactByEmail:
+                    type: "boolean"
+                  isContactBySms:
+                    type: "boolean"
+                  emailId: 
+                    type: "string"
+                  emailIds: 
+                    type: "array"
+                    items: 
+                      type: "string"
+                  isContactByPhone:
+                    type: "boolean"
+                  mobileNo: 
+                    type: "string"
+                  mobileNumbers: 
+                    type: "array"
+                    items: 
+                      type: "string"
+                  isContactByFax:
+                    type: "boolean"
+                  faxNo: 
+                    type: "string"
+                  isContactByPost:
+                    type: "boolean"
+                  isContactByUssd:
+                    type: "boolean"
+                  isContactByApp:
+                    type: "boolean"
+                  landlinePhoneNo:
+                    type: "string"
+                  preferredTime:
+                    type: "string"
+        serviceDetails: 
+          type: "array"
+          items: 
+            properties: 
+              serviceUserName: 
+                type: "string"
+              firstName: 
+                type: "string"
+              lastName: 
+                type: "string"
+              dateOfBirth: 
+                type: "string"
+              gender: 
+                type: "string"
+              serviceCode: 
+                type: "string"
+              customerCode: 
+                type: "string"
+              technology:
+                type: "string"
+              businessType:
+                type: "string"
+              serviceType:
+                type: "string"
+              subServiceType:
+                type: "string"
+              serviceNumber: 
+                type: "string"
+              serviceStatus:
+                type: "string"
+              imsiNumber:
+                type: "string"
+              simCategory:
+                type: "string"
+              simNumber:
+                type: "string"
+              offeringType:
+                type: "string"
+              code:
+                type: "string"
+              version:
+                type: "string"
+              activationDate:
+                type: "string"
+              name:
+                type: "string"
+              offeringContracts: 
+                type: "object"
+                properties: 
+                  activationDate: 
+                    type: "string"
+                  deactivationDate: 
+                    type: "string"
+              addresses: 
+                type: "array"
+                items: 
+                  properties: 
+                    latitude: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    longitude: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    districName: 
+                      type: "string"
+                    postalCode: 
+                      type: "string"
+                    cityName: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    locality: 
+                      type: "string"
+                    provinceName: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    streetName: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    addressFormat: 
+                      type: "string"
+                    addressType: 
+                      type: "string"
+                    buildingNumber: 
+                      type: "string" 
+                    country: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string" 
+                    poBox: 
+                      type: "string"
+                    premises: 
+                      type: "string"
+                    buildingName: 
+                      type: "string"
+                    apartment: 
+                      type: "string"
+                    neighbourhood: 
+                      type: "string"
+                    state: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string" 
+                    address1: 
+                      type: "string"
+                    address2: 
+                      type: "string"
+                    address3: 
+                      type: "string"
+                    LGA: 
+                      type: "string"
+                    localityPostalCode: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    subLocalityPostalCode: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    subLocality: 
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+                    landMark: 
+                      type: "string"
+                    floor: 
+                      type: "string"
+              notificationDetails:
+                type: "object"
+                properties:            
+                  isDNDApplicable: 
+                    type: "boolean"
+                  language: 
+                    type: "string"
+                  fromTime: 
+                    type: "string"
+                  toTime: 
+                    type: "string"
+                  isContactByEmail:
+                    type: "boolean"
+                  isContactBySms:
+                    type: "boolean"
+                  emailId: 
+                    type: "string"
+                  isContactByPhone:
+                    type: "boolean"
+                  mobileNo: 
+                    type: "string"
+                  isContactByFax:
+                    type: "boolean"
+                  faxNo: 
+                    type: "string"
+                  isContactByPost:
+                    type: "boolean"
+                  isContactByUssd:
+                    type: "boolean"
+                  isContactByApp:
+                    type: "boolean"
+                  landlinePhoneNo:
+                    type: "string"
+                  preferredTime:
+                    type: "string"
+    
+    
+    
+    
+    
+    

@@ -1,0 +1,59 @@
+---
+  swagger: "2.0"
+  info:
+    version: "1.0.0"
+    title: "API Reference"
+    description: "APIs capitalize on existing network infrastructure to create a vast array of business opportunities for telecom network operators worldwide. In essence, these APIs allow telecom network operators to exchange selected internal information or resources with third parties, in a controlled environment. These APIs can be used for multiple purposes at different levels and their utilization will evolve over time as the telecom API ecosystem matures."
+    termsOfService: "http://swagger.io/terms/"
+  basePath: "/service-mgmt"
+  tags:
+    -
+      name: "Customer Management API REST Specification"
+      description: "APIs that provide a standardized mechanism for customer account management"
+    -
+      name: "Loyalty Management API REST Specification"
+      description: "APIs that provide a standardized mechanism for Loyalty management"
+    -
+      name: "Product Ordering API REST Specification"
+      description: "APIs that provide a standardized mechanism for product order with all of the necessary order parameters"
+    -
+      name: "Trouble Ticket API REST Specification"
+      description: "APIs that provide a standardized mechanism for Trouble Ticket Management Systems to create, track and manage trouble tickets"
+    -
+      name: "Billing API REST Specification"
+      description: "APIs that provide standardized mechanism for billing accounts"
+    -
+      name: "Pre-validation API REST Specification"
+      description: "API that performs various validations"
+    -
+      name: "Master-data API REST Specification"
+      description: "APIs that provide a standardized mechanism to fetch various master-data"
+    -
+      name: "Utility Management API REST Specification"
+      description: "APIs that provide a standardized mechanism to enable/disable mock for APIs, encrypt data using AES algorithm"
+    -
+      name: "Number Reservation API REST Specification"
+      description: "APIs that provide a standardized mechanism for number reservations"
+
+  schemes:
+    - "http"
+  consumes:
+    - "application/json"
+  produces:
+    - "application/json"
+  paths:
+     # STARTS CUSTOMER MANAGEMENT CONFIGURATION
+    /v1/customer-management/customer-privileges:
+      $ref: "api/customer-management/customerPrivileges.yaml"
+    /v2/customer-management/customer-privileges:
+      $ref: "api/customer-management/customerPrivilegesV2.yaml"
+    /v2/customer-management/customers:
+      $ref: "api/customer-management/readCustomerDetails.yaml"
+    /v1/customer-management/customers/{customerCode}:
+      $ref: "api/customer-management/getProfileBasicDetails.yaml"
+    /v1/customer-management/customers:
+      $ref: "api/customer-management/userDetails.yaml"
+    /v1/customer-management/customers/{customerCode}:
+      $ref: "api/customer-management/getProfileBasicDetails.yaml"
+    
+    

@@ -1,0 +1,88 @@
+---
+  get: 
+    tags: 
+      - "Customer Management API REST Specification"
+    description: "Returns customer previleges accross hierarchical levels."
+    summary: "Fetch customer previleges accross hierarchical levels"
+    produces: 
+      - "application/json"
+    parameters: 
+      - 
+        name: "serviceNumber"
+        in: "query"
+        description: "service Number"
+        required: false
+        type: "string"
+      - 
+        name: "loginName"
+        in: "query"
+        description: "login Name"
+        required: false
+        type: "string"
+      - 
+        name: "lang"
+        in: "query"
+        description: "Language"
+        required: false
+        type: "string"
+    responses: 
+      204: 
+        description: "No Content" 
+      200: 
+        description: "Returns customer previleges accross hierarchical levels."
+        schema: 
+          $ref: "#/definitions/customerPrivileges"
+      
+      400: 
+        description: "Bad Request"
+        schema: 
+          $ref: "#/definitions/common_error"
+      422: 
+        description: "unprocessable entity"
+        schema: 
+          $ref: "#/definitions/common_error"
+      401: 
+        description: "Unauthorized"
+        schema: 
+          $ref: "#/definitions/common_error"
+      404: 
+        description: "Not found"
+        schema: 
+          $ref: "#/definitions/common_error"
+      500: 
+        description: "Internal server error"
+        schema: 
+          $ref: "#/definitions/common_error"  
+  definitions: 
+    common_error: 
+      type: "object"
+      properties: 
+        errorMessage: 
+          type: "string"
+        errorCode:
+          type: "string"
+      required: true 
+    customerPrivileges: 
+      properties: 
+        customerCode: 
+          type: "string"
+        billingDetails: 
+          type: "array"
+          items: 
+            properties: 
+              accountCode: 
+                type: "string"
+              serviceDetails:
+                type: "array"
+                items:
+                  properties:
+                    serviceCode:
+                      type: "string"
+                    serviceNumber:
+                      type: "string"      
+    
+    
+    
+    
+    
+    

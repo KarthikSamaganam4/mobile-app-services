@@ -1,0 +1,79 @@
+---
+  get: 
+    tags: 
+      - "Customer Management API REST Specification"
+    description: "Returns customer details based on user name/service Number"
+    summary: "fetch customer details based on user name/service Number"
+    produces: 
+      - "application/json"
+    parameters: 
+      - 
+        name: "userName"
+        in: "query"
+        description: "user name is used to access the account"
+        required: false
+        type: "string"
+      - 
+        name: "serviceNumber"
+        in: "query"
+        description: "service number is used to access the account"
+        required: false
+        type: "string"
+    responses: 
+      204: 
+        description: "No Content" 
+      200: 
+        description: "Returns customer details based on user name/service number"
+        schema: 
+          $ref: "#/definitions/fetchuserDetails"
+      
+      400: 
+        description: "Returns invalid response if the request does not follow the defined schema."
+        schema: 
+          $ref: "#/definitions/common_error"
+      422: 
+        description: "unprocessable entity"
+        schema: 
+          $ref: "#/definitions/common_error"
+      401: 
+        description: "Returns response as unauthorised for missing or invalid authentication token."
+        schema: 
+          $ref: "#/definitions/common_error"
+      500: 
+        description: "Returns error response due to errors from the database."
+        schema: 
+          $ref: "#/definitions/common_error"
+      504: 
+        description: "Returns error response due to connection time out. "
+        schema: 
+          $ref: "#/definitions/common_error"
+  definitions: 
+    common_error: 
+      type: "object"
+      properties: 
+        errorMessage: 
+          type: "string"
+        errorCode:
+          type: "string"
+      required: true 
+    fetchuserDetails: 
+      properties: 
+        emailId: 
+          type: "string"
+        serviceNumber: 
+          type: "string"
+        userName: 
+          type: "string"
+        language: 
+          type: "string"
+        role: 
+          type: "array"
+          items:
+            type: "string"
+    
+    
+    
+    
+    
+    
+    
